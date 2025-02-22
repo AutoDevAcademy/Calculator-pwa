@@ -7,39 +7,66 @@
     <link rel="manifest" href="manifest.json">
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        #calculator { width: 250px; margin: auto; padding: 20px; border: 2px solid black; border-radius: 10px; background-color: #f9f9f9; }
-        #display { width: 100%; height: 40px; text-align: right; font-size: 20px; }
-        .btn { width: 60px; height: 60px; font-size: 18px; margin: 5px; }
+        #calculator { 
+            width: 280px; 
+            margin: auto; 
+            padding: 20px; 
+            border: 2px solid black; 
+            border-radius: 10px; 
+            background-color: #f9f9f9;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        #expression, #display { 
+            grid-column: span 4; 
+            height: 40px; 
+            text-align: right; 
+            font-size: 20px; 
+            border: none; 
+            background: none;
+        }
+        #expression { color: gray; height: 30px; font-size: 16px; }
+        .btn { 
+            width: 60px; 
+            height: 60px; 
+            font-size: 18px; 
+            text-align: center; 
+        }
+        .btn.operator { background-color: #ff9f43; }
+        .btn.equal { background-color: #4cd137; }
+        .btn.clear { background-color: #e84118; }
     </style>
 </head>
 <body>
     <h2>Web Calculator</h2>
     <div id="calculator">
+        <input type="text" id="expression" disabled>
         <input type="text" id="display" disabled>
-        <br>
-        <button class="btn" onclick="clearDisplay()">C</button>
-        <button class="btn" onclick="appendCharacter('%')">%</button>
-        <button class="btn" onclick="appendCharacter('^')">^</button>
-        <button class="btn" onclick="appendCharacter('/')">/</button>
-        <br>
+
+        <button class="btn clear" onclick="clearDisplay()">C</button>
+        <button class="btn operator" onclick="appendCharacter('%')">%</button>
+        <button class="btn operator" onclick="appendCharacter('^')">^</button>
+        <button class="btn operator" onclick="appendCharacter('/')">/</button>
+
         <button class="btn" onclick="appendCharacter('7')">7</button>
         <button class="btn" onclick="appendCharacter('8')">8</button>
         <button class="btn" onclick="appendCharacter('9')">9</button>
-        <button class="btn" onclick="appendCharacter('*')">*</button>
-        <br>
+        <button class="btn operator" onclick="appendCharacter('*')">*</button>
+
         <button class="btn" onclick="appendCharacter('4')">4</button>
         <button class="btn" onclick="appendCharacter('5')">5</button>
         <button class="btn" onclick="appendCharacter('6')">6</button>
-        <button class="btn" onclick="appendCharacter('-')">-</button>
-        <br>
+        <button class="btn operator" onclick="appendCharacter('-')">-</button>
+
         <button class="btn" onclick="appendCharacter('1')">1</button>
         <button class="btn" onclick="appendCharacter('2')">2</button>
         <button class="btn" onclick="appendCharacter('3')">3</button>
-        <button class="btn" onclick="appendCharacter('+')">+</button>
-        <br>
+        <button class="btn operator" onclick="appendCharacter('+')">+</button>
+
         <button class="btn" onclick="appendCharacter('0')">0</button>
         <button class="btn" onclick="appendCharacter('.')">.</button>
-        <button class="btn" onclick="calculateResult()">=</button>
+        <button class="btn equal" onclick="calculateResult()">=</button>
     </div>
 
     <script>
@@ -48,6 +75,7 @@
         }
 
         function clearDisplay() {
+            document.getElementById('expression').value = '';
             document.getElementById('display').value = '';
         }
 
@@ -55,7 +83,9 @@
             let expression = document.getElementById('display').value;
             try {
                 expression = expression.replace(/\^/g, '**');
-                document.getElementById('display').value = eval(expression);
+                let result = eval(expression);
+                document.getElementById('expression').value = expression + ' =';
+                document.getElementById('display').value = result;
             } catch (error) {
                 document.getElementById('display').value = 'Error';
             }
